@@ -11,7 +11,7 @@ REST API на Flask для ЛР1 по предмету 'Информационн
 ## Запуск
 ```bash
 python -m venv venv
-source venv/bin/activate
+#source venv/bin/activate <- linux
 venv\Scripts\activate
 pip install -r req.txt
 export FLASK_APP=app.py
@@ -20,8 +20,14 @@ export SECRET_KEY="change_me_harder"
 flask run
 ```
 
+```bash
 curl -X POST http://127.0.0.1:5000/auth/register ^ -H "Content-Type: application/json" ^ -d "{\"username\":\"user1\",\"password\":\"secret\"}"
+```
 
+```bash
 curl -X POST http://localhost:5000/auth/login ^ -H "Content-Type: application/json" -d "{\"username\":\"user1\",\"password\":\"secret\"}"
+```
 
-curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJuYW1lIjoidXNlcjEiLCJleHAiOjE3NTk4NTY0MjV9.iovstcdeCJY33snyN37EsNasLGFg8tLR_7to2tUaNgs" http://localhost:5000/api/data
+```bash
+curl -H "Authorization: Bearer <token>" http://localhost:5000/api/data
+```

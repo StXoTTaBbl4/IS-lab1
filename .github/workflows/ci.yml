@@ -15,7 +15,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: "3.13"
 
       - name: Install dependencies
         run: |
@@ -23,24 +23,25 @@ jobs:
           pip install -r req.txt
 
       - name: SAST - Bandit
-#          Игнорирую flask_debug_true и hardcoded_bind_all_interfaces, потому что это не цель лабы
+        # Игнорирую flask_debug_true и hardcoded_bind_all_interfaces, потому что это не цель лабы
         run: |
           pip install bandit
-          bandit -r . --exclude ./venv --skip B201,B104 -f json -o ./reports/bandit-report.json
+          bandit -r . --exclude ./venv --skip B201,B104 -f json -o bandit-report.json
         continue-on-error: false
 
       - name: SCA - pip-audit
+        # Проверка зависимостей на известные уязвимости
         run: |
           pip install pip-audit
-          pip-audit --format=json -o ./reports/pip-audit-report.json
+          pip-audit --format=json -o pip-audit-report.json
         continue-on-error: true
 
 
       - name: Upload reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: security-reports
           path: |
             bandit-report.json
             pip-audit-report.json
-            safety-report.json

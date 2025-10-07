@@ -48,7 +48,7 @@ def create_app():
 
     @app.route("/api/data", methods=["GET"])
     @require_auth
-    def get_data(payload):
+    def get_data():
         users = User.query.all()
         result = []
         for u in users:
@@ -61,7 +61,6 @@ def create_app():
 
     @app.route("/auth/register", methods=["POST"])
     def register():
-
         data = request.get_json() or {}
         username = data.get("username")
         password = data.get("password")
