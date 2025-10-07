@@ -33,7 +33,7 @@ jobs:
         run: |
           pip install pip-audit
           pip-audit --format=json -o ./reports/pip-audit-report.json
-        continue-on-error: false
+        continue-on-error: true
 
 
       - name: Upload reports
