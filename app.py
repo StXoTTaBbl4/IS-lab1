@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, abort
+from flask import Flask, request, jsonify
 from models import db, User
 from config import Config
 from auth import hash_password, verify_password, create_jwt, decode_jwt
@@ -41,14 +41,16 @@ def create_app():
             token = auth_header.split(" ", 1)[1].strip()
             try:
                 payload = decode_jwt(token, app.config["SECRET_KEY"], [app.config["JWT_ALGORITHM"]])
+                # print("JWT payload:", payload)
             except Exception as e:
+                # print("JWT decode error:", e)
                 return jsonify({"error": "invalid token", "details": str(e)}), 401
             return fn(payload, *args, **kwargs)
         return wrapper
 
     @app.route("/api/data", methods=["GET"])
     @require_auth
-    def get_data():
+    def get_data(payload):
         users = User.query.all()
         result = []
         for u in users:
@@ -80,4 +82,6 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    debug_mode = os.getenv("DEBUG_MODE", "false").lower() == "true"
+    host = os.getenv("HOST", "127.0.0.1")
+    app.run(debug=debug_mode, host=host, port=int(os.environ.get("PORT", 5000)))

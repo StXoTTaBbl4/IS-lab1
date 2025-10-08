@@ -26,7 +26,7 @@ jobs:
         # Игнорирую flask_debug_true и hardcoded_bind_all_interfaces, потому что это не цель лабы
         run: |
           pip install bandit
-          bandit -r . --exclude ./venv --skip B201,B104 -f json -o bandit-report.json
+          bandit -r . --exclude ./venv -f json -o bandit-report.json
         continue-on-error: false
 
       - name: SCA - pip-audit

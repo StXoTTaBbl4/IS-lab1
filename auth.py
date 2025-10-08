@@ -1,5 +1,5 @@
 from passlib.context import CryptContext
-from datetime import datetime, timedelta
+from datetime import datetime, timezone
 import jwt
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -16,7 +16,9 @@ def verify_password(password: str, hashed: str) -> bool:
 
 def create_jwt(payload: dict, secret: str, algorithm: str, exp_delta) -> str:
     payload_copy = payload.copy()
-    payload_copy["exp"] = datetime.utcnow() + exp_delta
+    if "sub" in payload_copy and payload_copy["sub"] is not None:
+        payload_copy["sub"] = str(payload_copy["sub"])
+    payload_copy["exp"] = datetime.now(timezone.utc) + exp_delta
     return jwt.encode(payload_copy, secret, algorithm=algorithm)
 
 def decode_jwt(token: str, secret: str, algorithms):

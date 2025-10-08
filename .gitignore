@@ -2,4 +2,5 @@ venv
 *.pyc
 .env
 instance
-reports
+report
+images
