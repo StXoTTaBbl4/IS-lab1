@@ -71,6 +71,8 @@ def create_app():
         # print("DEBUG username:", username, "password:", password)
         if not username or not password:
             return jsonify({"error": "username and password required"}), 400
+        if len(password) < 5:
+            return jsonify({"error": "password too short"}), 400
         if User.query.filter_by(username=username).first():
             return jsonify({"error": "username exists"}), 400
         user = User(username=username, password_hash=hash_password(password))
